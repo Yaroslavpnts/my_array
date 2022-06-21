@@ -1,25 +1,26 @@
 class MyArray {
-  constructor(...args) {
+  constructor(firstP, ...args) {
     let numberOfArgs = 0;
-    let number;
-    let typeOfArg;
+
 
     for (let arg of args) {
       numberOfArgs += 1;
-      typeOfArg = typeof arg;
-      number = arg;
     }
 
-    if (numberOfArgs === 1 && typeOfArg === 'number') {
-      for (let i = 0; i < number; i += 1) {
+    if (numberOfArgs === 0 && typeof firstP === 'number') {
+
+      numberOfArgs = firstP;
+
+      for (let i = 0; i < numberOfArgs; i += 1) {
         this[i] = undefined;
       }
 
-      numberOfArgs = number;
     } else {
+
       for (let i = 0; i < numberOfArgs; i += 1) {
         this[i] = args[i];
       }
+
     }
 
     this.length = numberOfArgs;
@@ -179,5 +180,5 @@ console.log(test.sort());
 
 
 
-
+console.log(new MyArray(5));
 
