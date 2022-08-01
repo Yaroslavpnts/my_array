@@ -2,28 +2,25 @@ class MyArray {
   constructor(firstP, ...args) {
     let numberOfArgs = 0;
 
-
     for (let arg of args) {
       numberOfArgs += 1;
     }
 
     if (numberOfArgs === 0 && typeof firstP === 'number') {
-
       numberOfArgs = firstP;
 
       for (let i = 0; i < numberOfArgs; i += 1) {
         this[i] = undefined;
       }
-
     } else {
+      this[0] = firstP;
 
-      for (let i = 0; i < numberOfArgs; i += 1) {
-        this[i] = args[i];
+      for (let i = 1; i <= numberOfArgs; i += 1) {
+        this[i] = args[i - 1];
       }
-
     }
 
-    this.length = numberOfArgs;
+    this.length = numberOfArgs + 1;
   }
 
   push(item) {
@@ -53,16 +50,15 @@ class MyArray {
   }
 
   unshift(item) {
-
     for (let i = this.length - 1; i >= 0; i -= 1) {
-        this[i + 1] = this[i];
+      this[i + 1] = this[i];
 
-        if (i === 0) {
-            this[i] = item;
-        }
+      if (i === 0) {
+        this[i] = item;
+      }
     }
 
-    return this.length += 1;
+    return (this.length += 1);
   }
 
   forEach(fn) {
@@ -84,101 +80,82 @@ class MyArray {
   }
 
   reduce(fn, initialValue) {
-
     let accumulator = initialValue ? initialValue : this[0];
-    let total = 0;
 
     if (initialValue) {
-        for ( let i = 0; i < this.length; i += 1 ) {
-            total = fn(accumulator, this[i]);
-            accumulator += this[i];
-        }
+      for (let i = 0; i < this.length; i += 1) {
+        accumulator = fn(accumulator, this[i]);
+      }
     } else {
-        for ( let i = 1; i < this.length; i += 1 ) {
-            total = fn(accumulator, this[i]);
-            accumulator += this[i];
-        }
+      for (let i = 1; i < this.length; i += 1) {
+        accumulator = fn(accumulator, this[i]);
+      }
     }
-    
-    return total;
+
+    return accumulator;
   }
 
   filter(fn) {
-
     let arr = new MyArray();
 
-    for ( let i = 0; i < this.length; i += 1 ) {
-        if(fn(this[i], i, this)) {
-            arr.push(this[i]);
-        }
+    for (let i = 0; i < this.length; i += 1) {
+      if (fn(this[i], i, this)) {
+        arr.push(this[i]);
+      }
     }
 
     return arr;
   }
 
   sort(fn) {
-
     let result;
 
     if (!fn) {
-        for ( let i = 0; i < this.length; i += 1 ) {
-            for ( let j = 0; j <= this.length - i - 1; j += 1 ) {
-                 result = fn(this[j + 1], this[j]);
-    
-                 if (!result) {
-                    [this[j + 1], this[j]] = [this[j], this[j + 1]] 
-                 }
-            }
+      for (let i = 0; i < this.length; i += 1) {
+        for (let j = 0; j <= this.length - i - 1; j += 1) {
+          result = fn(this[j + 1], this[j]);
+
+          if (!result) {
+            [this[j + 1], this[j]] = [this[j], this[j + 1]];
+          }
         }
-        
-        return this;
+      }
+
+      return this;
     }
 
-    for ( let i = 0; i < this.length; i += 1 ) {
-        for ( let j = 0; j <= this.length - i - 1; j += 1 ) {
-             result = fn(this[j + 1], this[j]);
+    for (let i = 0; i < this.length; i += 1) {
+      for (let j = 0; j <= this.length - i - 1; j += 1) {
+        result = fn(this[j + 1], this[j]);
 
-             if (result < 0) {
-                [this[j + 1], this[j]] = [this[j], this[j + 1]] 
-             }
+        if (result < 0) {
+          [this[j + 1], this[j]] = [this[j], this[j + 1]];
         }
+      }
     }
 
     return this;
-
   }
 
   static from(iterable, fn) {
-
     let array = new MyArray();
 
-    if ( iterable[Symbol.iterator] ) {
-        
-        for (let i of iterable) {
-            array.push(i);
-        }
-           
+    if (iterable[Symbol.iterator]) {
+      for (let i of iterable) {
+        array.push(i);
+      }
     }
 
     if (fn) {
-        array = array.map(fn);
+      array = array.map(fn);
     }
 
     return array;
   }
 }
 
+let array = new MyArray(7, 6, 5);
 
-let array = new MyArray(7, 6, 5, 11, 4, 23, 2, 1);
+// console.log(array.sort((a, b) => a - b));
 
-console.log(array.sort((a, b) => a - b));
-
-
-let test = ['в', 'а', 'н', 'р', 'я', 'з'];
-
-console.log(test.sort());
-
-
-
-console.log(new MyArray(5));
-
+// let test = ['в', 'а', 'н', 'р', 'я', 'з'];
